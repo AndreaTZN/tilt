@@ -1,0 +1,138 @@
+@use './components/button.scss';
+@use './components/animation.scss';
+
+// ================================================
+// Home
+// ================================================
+
+// TAB ANIMATION
+.home-tabs_component {
+  .features-tab_item {
+    opacity: 0.5;
+    .features-tab_header {
+      .features-tab_title {
+        transform-origin: center left;
+        transition: font-size 0.2s cubic-bezier(0.87, 0, 0.13, 1),
+          transform 0.6s cubic-bezier(0.87, 0, 0.13, 1);
+      }
+    }
+
+    .features-tab_p-content {
+      display: none;
+      overflow: hidden;
+      height: 0;
+    }
+
+    &.active {
+      opacity: 1;
+
+      .features-tab_title--large {
+        display: block;
+      }
+      .features-tab_p-content {
+        display: block;
+      }
+    }
+  }
+}
+
+//CHIFFRES CLÉS
+.home-chiffres_component {
+  .home-chiffres_item-wrap {
+    .home-chiffres_item-text {
+      opacity: 0.25;
+      transition: all 0.3s cubic-bezier(0.455, 0.03, 0.515, 0.955);
+    }
+    .text-size-medium {
+      opacity: 0.25;
+      transition: opacity 0.3s cubic-bezier(0.455, 0.03, 0.515, 0.955);
+    }
+
+    &.is-active {
+      .home-chiffres_item-text {
+        color: var(--base-color--primary);
+        opacity: 1;
+      }
+      .text-size-medium {
+        opacity: 1;
+      }
+    }
+  }
+}
+
+// ================================================
+// About
+// ================================================
+
+.all-jobs-list_wrap {
+  opacity: 0;
+  transform: translateY(1.5rem);
+}
+.swiper-slide.is-slider-valeurs {
+  height: auto;
+}
+@media (min-width: 992px) {
+  .swiper-slide.is-slider-valeurs {
+    transition: all 0.5s ease-in-out;
+    filter: blur(3px);
+    backdrop-filter: blur(10px);
+    width: 100%;
+    &.swiper-slide-active {
+      filter: blur(0px);
+    }
+  }
+}
+.swiper.is-slider-valeurs {
+  overflow: visible;
+}
+[swiper-unselect-text] {
+  user-select: none;
+}
+
+.valeurs_img-wrap,
+.swiper-wrapper.is-slider-valeurs {
+  will-change: transform;
+}
+
+// ================================================
+// FAQ
+// ================================================
+
+.faq_item {
+  .faq-spacer,
+  .faq_answer {
+    height: 0;
+  }
+}
+
+.div-block-5 {
+  position: relative;
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: 0.0625rem;
+    background: radial-gradient(
+      50% 50% at 50% 50%,
+      rgba(255, 255, 255, 0.3) 0%,
+      rgba(255, 255, 255, 0) 100%
+    );
+  }
+  &::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: 0.0625rem;
+    background: radial-gradient(
+      50% 50% at 50% 50%,
+      rgba(255, 255, 255, 0.3) 0%,
+      rgba(255, 255, 255, 0) 100%
+    );
+  }
+}
