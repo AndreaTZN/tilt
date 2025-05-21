@@ -848,4 +848,21 @@ window.Webflow.push(() => {
     // Ajouter l'élément script à l'en-tête du document
     document.getElementsByTagName('head')[0].appendChild(script);
   });
+<<<<<<< alex
+
+  // ================================================
+  // LAYOUT CLIENTS REEL
+  // ================================================
+  $('.layout2-client_reel-component').each(function () {
+    let reeller = new Reeller({
+      container: '.layout2-client_reel',
+      wrapper: '.layout2-client_reel-wrap',
+      itemSelector: '.layout2-client_reel-item',
+      speed: 10,
+    });
+
+    reeller.reverse(true);
+  });
+=======
+>>>>>>> main
 });
