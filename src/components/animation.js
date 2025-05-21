@@ -848,6 +848,7 @@ window.Webflow.push(() => {
     // Ajouter l'élément script à l'en-tête du document
     document.getElementsByTagName('head')[0].appendChild(script);
   });
+<<<<<<< alex
 
   // ================================================
   // LAYOUT CLIENTS REEL
@@ -862,4 +863,6 @@ window.Webflow.push(() => {
 
     reeller.reverse(true);
   });
+=======
+>>>>>>> main
 });
