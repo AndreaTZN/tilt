@@ -2,7 +2,7 @@
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import DrawSVGPlugin from 'gsap/DrawSVGPlugin';
-
+import SplitType from 'split-type';
 import { Reeller } from 'reeller';
 import { Flip } from 'gsap/Flip';
 
@@ -11,6 +11,118 @@ gsap.registerPlugin(ScrollTrigger, Flip, DrawSVGPlugin);
 
 window.Webflow ||= [];
 window.Webflow.push(() => {
+  // ================================================
+  // NAVBAR DROPDOWNS
+  // ================================================
+  $('.nav_component').each(function () {
+    if (window.innerWidth > 992) {
+      let timelines = {};
+      let isDropdownOpen = {};
+      let isDropdownAnimated = {};
+      function initializeDropdown(selector, timelineKey) {
+        const dropdownLink = document.querySelector(`.navbar_menu-dropdown.${selector}`);
+        const dropdownArrow = document.querySelector(`.dropdown-chevron.${selector}`);
+        const dropdownContainer = document.querySelector(`.dropdown-container.${selector}`);
+        const dropdownWrapper = document.querySelector(`.dropdown-wrapper.${selector}`);
+        const dropdownLine = document.querySelector(`[nav-dropdown-line = "${selector}"]`);
+        const blurDropdown = document.querySelector(`[nav-dropdown-blur = "${selector}`);
+        if (!dropdownLink || !dropdownContainer || !dropdownWrapper) return;
+        timelines[timelineKey] = gsap
+          .timeline({ paused: true, reversed: true })
+          .to(dropdownContainer, { display: 'flex', duration: 0 })
+          .fromTo(
+            dropdownWrapper,
+            { opacity: 0, y: '-1rem' },
+            {
+              opacity: 1,
+              y: '0rem',
+              duration: 0.5,
+              ease: 'power2.out',
+            }
+          )
+          .to(dropdownArrow, { rotate: 180, duration: 0.6, ease: 'power2.out' }, '<')
+          .to(blurDropdown, { opacity: 1, duration: 0.6 }, '<')
+          .to(dropdownLine, { scaleX: 1, duration: 0.6 }, '-=.3');
+        isDropdownOpen[timelineKey] = false;
+        function openDropdown() {
+          timelines[timelineKey].play();
+          dropdownContainer.style.zIndex = '3';
+          isDropdownOpen[timelineKey] = true;
+        }
+        function closeDropdown() {
+          timelines[timelineKey].timeScale(7).reverse();
+          dropdownContainer.style.zIndex = '1';
+          isDropdownOpen[timelineKey] = false;
+        }
+        function handleMouseLeave(event) {
+          if (
+            !dropdownLink.contains(event.relatedTarget) &&
+            !dropdownContainer.contains(event.relatedTarget)
+          ) {
+            closeDropdown();
+          }
+        }
+        dropdownLink.addEventListener('mouseenter', () => {
+          if (!isDropdownOpen[timelineKey]) {
+            timelines[timelineKey].timeScale(1);
+            openDropdown();
+          }
+        });
+        dropdownLink.addEventListener('mouseleave', handleMouseLeave);
+        dropdownContainer.addEventListener('mouseleave', handleMouseLeave);
+      }
+      function destroyDropdown(selector, timelineKey) {
+        const dropdownLink = document.querySelector(`.navbar_menu-dropdown.${selector}`);
+        const dropdownContainer = document.querySelector(`.dropdown-container.${selector}`);
+        if (dropdownLink && dropdownContainer) {
+          dropdownLink.replaceWith(dropdownLink.cloneNode(true)); // Remove all listeners
+          dropdownContainer.replaceWith(dropdownContainer.cloneNode(true));
+        }
+        if (timelines[timelineKey]) {
+          timelines[timelineKey].kill();
+          delete timelines[timelineKey];
+          delete isDropdownOpen[timelineKey];
+        }
+      }
+      // Initialisation dynamique en fonction de la taille de l'écran
+      function handleResize() {
+        const selectors = [
+          { key: 'product', className: 'is-solutions' },
+          { key: 'clients', className: 'is-clients' },
+        ];
+        if (window.innerWidth > 992) {
+          selectors.forEach(({ key, className }) => {
+            if (!timelines[key]) {
+              initializeDropdown(className, key);
+            }
+          });
+        } else {
+          selectors.forEach(({ key, className }) => {
+            destroyDropdown(className, key);
+          });
+        }
+      }
+      window.addEventListener('resize', handleResize);
+      handleResize();
+    }
+    if (window.innerWidth < 992) {
+      let navbarDropdownToggle = document.querySelectorAll('.navbar_dropdwn-toggle');
+      let buttonMenuMobile = document.querySelector('.nav_burger');
+      navbarDropdownToggle.forEach((toggleButton) => {
+        let dropdownIsOpen = false;
+        toggleButton.addEventListener('click', () => {
+          dropdownIsOpen = true;
+        });
+        buttonMenuMobile.addEventListener('click', () => {
+          if (dropdownIsOpen) {
+            toggleButton.click();
+            dropdownIsOpen = false;
+          }
+        });
+      });
+    }
+  });
+
   // ================================================
   // HOME
   // ================================================
@@ -38,6 +150,31 @@ window.Webflow.push(() => {
     });
   });
 
+  $('.layout2_card-reel-wrap').each(function () {
+    const $wrap = $(this); // .layout2_card-reel-wrap (le wrapper global)
+
+    const $container = $wrap.find('.layout2_reel')[0];
+
+    let reeller = new Reeller({
+      container: $container,
+      wrapper: '.layout2_reel-wrap',
+      itemSelector: '.layout2_reel-item',
+      speed: 20,
+    });
+  });
+  $('.layout2_card-reel-wrap').each(function () {
+    const $wrap = $(this); // .layout2_card-reel-wrap (le wrapper global)
+
+    const $container = $wrap.find('.layout2_reel')[1];
+
+    let reeller = new Reeller({
+      container: $container,
+      wrapper: '.layout2_reel-wrap',
+      itemSelector: '.layout2_reel-item',
+      speed: 20,
+    });
+    reeller.reverse(true);
+  });
   // TAB ANIMATION
 
   $('.home-tabs_component').each(function () {
@@ -88,7 +225,7 @@ window.Webflow.push(() => {
             paragraphe,
             {
               height: 'auto',
-              duration: 0.6,
+              duration: 1,
               ease: 'power3.out',
             },
             '<'
@@ -229,6 +366,7 @@ window.Webflow.push(() => {
       duration: 1.2,
     });
   });
+
   // ================================================
   // CONTACT
   // ================================================
@@ -397,67 +535,317 @@ window.Webflow.push(() => {
   });
 
   // ================================================
-  // FAQ
+  // INVESTISSEURS
   // ================================================
 
-  $('.faq_item').each(function (index) {
-    let answer = $(this).find('.faq_answer');
-    let line1 = $(this).find('.faq-header_icon.is-1');
-    let line2 = $(this).find('.faq-header_icon.is-2');
-    let title = $(this).find('.faq_title');
-    const tl = gsap.timeline({ paused: true });
-    tl.to(
-      answer,
-      {
-        height: 'auto',
-        duration: 0.6,
-        ease: 'power2.inOut',
+  let typeSplitScrubWord = new SplitType('[text-split]', {
+    types: 'words, chars',
+    tagName: 'span',
+  });
+  gsap.set('[text-split]', { opacity: 1 });
+
+  $('[scrub-each-word]').each(function (index) {
+    let tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: $(this),
+        start: 'top 50%',
+        end: 'bottom 50%',
+        once: true,
+        scrub: 0.5,
       },
-      'start'
-    )
-      .to(
-        title,
-        {
-          opacity: 1,
-        },
-        'start'
-      )
-      .to(
-        line1,
-        {
-          rotate: -45,
-          duration: 0.6,
-          backgroundColor: '#155CED',
-          opacity: 1,
-          ease: 'power2.inOut',
-        },
-        'start'
-      )
-      .to(
-        line2,
-        {
-          rotate: 45,
-          duration: 0.6,
-          backgroundColor: '#155CED',
-          opacity: 1,
-          ease: 'power2.inOut',
-        },
-        'start'
-      );
-    let isPlaying = false;
-    // Si c'est le premier item, jouer automatiquement l'animation
-    if (index === 0) {
-      tl.play();
-      isPlaying = true;
-    }
-    $(this).on('click', () => {
-      if (isPlaying) {
-        tl.reverse();
-        isPlaying = false;
-      } else {
-        tl.play();
-        isPlaying = true;
-      }
     });
+    tl.fromTo(
+      $(this).find('.word'),
+      { color: '#D9D9DA' },
+      {
+        color: '#515050',
+        duration: 1.2,
+        ease: 'power1.out',
+        stagger: { each: 0.4 },
+      }
+    );
+  });
+
+  $('.investisseurs_component').each(function () {
+    let $this = $(this);
+    let investisseursLogos = $this.find('.investisseurs_logo-wrap');
+    let tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: '.investisseurs_logo-contain',
+        start: 'top 70%',
+        end: 'bottom 50%',
+        markers: false,
+        once: true,
+      },
+    });
+    tl.to(investisseursLogos, {
+      opacity: 1,
+      duration: 1.5,
+      ease: 'power1.out',
+      stagger: { each: 0.2 },
+    });
+  });
+
+  // ================================================
+  // CTA 2
+  // ================================================
+
+  $('.cta2_section').each(function () {
+    let el = $(this);
+    let cube = el.find('.cta2_cube');
+    let tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: el,
+        start: 'top bottom',
+        end: 'bottom top',
+
+        scrub: true,
+      },
+    });
+
+    tl.to(cube, {
+      yPercent: 120,
+      willChange: 'tranform',
+      ease: 'none',
+    });
+  });
+
+  // ================================================
+  // CLIENTS
+  // ================================================
+  $('[client-consommateurs]').each(function () {
+    let $this = $(this);
+    let $icons = $this.find('.client-hero_toggle-icon-1');
+    let $icons2contour = $this.find('.client-hero_toggle-icon-2-contour');
+    let $icons2 = $this.find('.client-hero_toggle-icon-2');
+    let clientHeroToggleDotWrap = $this.find('.client-hero_toggle-dot-wrap');
+    let clientHeroToggleDot = $this.find('.client-hero_toggle-dot');
+    let clientHeroGraphWrap = $this.find('.client-hero_graph-wrap');
+    let delayBetweenStates = 4000;
+    let tl = gsap.timeline({ paused: true });
+    tl.to(clientHeroToggleDotWrap, {
+      x: '-100%',
+      duration: 0.5,
+    }).to(
+      clientHeroToggleDot,
+      {
+        backgroundColor: '#E30E6E',
+        duration: 0.5,
+      },
+      '<'
+    );
+    setTimeout(() => {
+      tl.play();
+      setTimeout(() => {
+        tl.reverse();
+      }, tl.duration() * 1000 + delayBetweenStates);
+    }, 1000);
+    let tlIcones = gsap.timeline();
+    tlIcones
+      .to($icons, {
+        rotate: 180,
+        duration: 0.5,
+        delay: 1,
+      })
+      .to(
+        $icons,
+        {
+          opacity: 0,
+          duration: 0.5,
+        },
+        '+=3'
+      )
+      .to(
+        $icons2,
+        {
+          opacity: 1,
+          duration: 0.5,
+        },
+        '<'
+      )
+      .to(
+        $icons2contour,
+        {
+          opacity: 1,
+          duration: 0.5,
+        },
+        '<'
+      )
+      .to(
+        $icons2,
+        {
+          rotate: 180,
+          y: 1.5,
+          duration: 0.5,
+        },
+        '+=.5'
+      );
+    gsap.to(clientHeroGraphWrap, {
+      opacity: 1,
+      duration: 0.5,
+      ease: 'power1.out',
+      delay: 0.5,
+    });
+  });
+  $('[connecte-consommateurs]').each(function () {
+    let $this = $(this);
+    let connecteRightCube = $this.find('.connecte_right-cube');
+    let connecteLeftCube = $this.find('.connecte_left-cube');
+    let tlCubeGauche = gsap.timeline({ paused: true, once: true });
+    function floatAxis(el, prop, min, max, minDur, maxDur) {
+      function animate() {
+        gsap.to(el, {
+          [prop]: gsap.utils.random(min, max),
+          duration: gsap.utils.random(minDur, maxDur),
+          ease: 'sine.inOut',
+          onComplete: animate,
+        });
+      }
+      animate();
+    }
+    floatAxis(connecteRightCube, 'x', -8, 8, 2, 3);
+    floatAxis(connecteRightCube, 'y', -8, 8, 2, 3);
+    floatAxis(connecteRightCube, 'rotate', -4, 4, 2, 3);
+    tlCubeGauche.to(connecteLeftCube, {
+      y: '0%',
+      x: '0%',
+      duration: 1,
+      ease: 'linear',
+    });
+    ScrollTrigger.create({
+      trigger: $this,
+      start: 'top 70%',
+      end: 'bottom 50%',
+      onEnter: () => {
+        tlCubeGauche.play();
+      },
+    });
+  });
+  $('.connecte2_contain').each(function () {
+    let $this = $(this);
+    let connecte2Cards = $this.find('.connecte2_card');
+    connecte2Cards.each(function () {
+      let $this = $(this);
+      let tl = gsap.timeline({
+        paused: true,
+        scrollTrigger: {
+          trigger: $this,
+          start: 'top 60%',
+          end: 'bottom 50%',
+        },
+      });
+      tl.to($this, {
+        opacity: 1,
+        transform: 'translateY(0)',
+      });
+    });
+  });
+
+  // ================================================
+  // FAQ
+  // ================================================
+  $('.faq_component').each(function () {
+    let faqTimelines = [];
+    $('.faq_item').each(function (index) {
+      let answer = $(this).find('.faq_answer');
+      let line1 = $(this).find('.faq-header_icon.is-1');
+      let line2 = $(this).find('.faq-header_icon.is-2');
+      let title = $(this).find('.faq_title');
+      const tl = gsap.timeline({ paused: true });
+      tl.to(
+        answer,
+        {
+          height: 'auto',
+          duration: 0.6,
+          ease: 'power2.inOut',
+        },
+        'start'
+      )
+        .to(
+          title,
+          {
+            opacity: 1,
+          },
+          'start'
+        )
+        .to(
+          line1,
+          {
+            rotate: -45,
+            duration: 0.6,
+            backgroundColor: '#155CED',
+            opacity: 1,
+            ease: 'power2.inOut',
+          },
+          'start'
+        )
+        .to(
+          line2,
+          {
+            rotate: 45,
+            duration: 0.6,
+            backgroundColor: '#155CED',
+            opacity: 1,
+            ease: 'power2.inOut',
+          },
+          'start'
+        );
+      faqTimelines.push({ tl, isPlaying: false });
+      if (index === 0) {
+        tl.play();
+        faqTimelines[index].isPlaying = true;
+      }
+      $(this).on('click', () => {
+        faqTimelines.forEach((item, i) => {
+          if (i !== index && item.isPlaying) {
+            item.tl.reverse();
+            item.isPlaying = false;
+          }
+        });
+        if (faqTimelines[index].isPlaying) {
+          faqTimelines[index].tl.reverse();
+          faqTimelines[index].isPlaying = false;
+        } else {
+          faqTimelines[index].tl.play();
+          faqTimelines[index].isPlaying = true;
+        }
+      });
+    });
+    // Initialiser un tableau vide pour stocker les données de la FAQ
+    let faqArray = [];
+    // Trouver tous les éléments de la classe faq_title à l'intérieur du faq_wrapper actuel
+    let faqTitle = $(this).find('.faq_title');
+    // Trouver tous les éléments de la classe rich_text_faq à l'intérieur du faq_wrapper actuel
+    let faqAnswer = $(this).find('.faq-rich-text');
+    // Parcourir chaque élément de la classe faq_title
+    faqTitle.each(function (index, element) {
+      // Obtenir le contenu texte de l'élément faq_title actuel
+      let question = $(element).text();
+      // Obtenir le contenu HTML de l'élément rich_text_faq correspondant
+      let answer = $(faqAnswer[index]).html();
+      // Créer un nouvel objet FAQ avec les données de la question et de la réponse
+      let faqObject = {
+        '@type': 'Question',
+        name: question,
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: answer,
+        },
+      };
+      // Ajouter l'objet FAQ au tableau faqArray
+      faqArray.push(faqObject);
+    });
+    // Créer un nouvel objet FAQPage avec les données du tableau faqArray
+    let faqSchema = {
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: faqArray,
+    };
+    // Créer un nouvel élément script pour stocker les données JSON-LD
+    let script = document.createElement('script');
+    script.type = 'application/ld+json';
+    script.innerHTML = JSON.stringify(faqSchema);
+    // Ajouter l'élément script à l'en-tête du document
+    document.getElementsByTagName('head')[0].appendChild(script);
   });
 });

@@ -211,3 +211,20 @@
     }
   }
 }
+
+.dropdown-item-wrap {
+  .dropdown_item-svg {
+    transition: transform 0.3s ease-in-out;
+  }
+  .dropdown_item-svg-2 {
+    transition: transform 0.3s ease-in-out;
+  }
+  &:hover {
+    .dropdown_item-svg {
+      transform: translateX(100%);
+    }
+    .dropdown_item-svg-2 {
+      transform: translateX(0);
+    }
+  }
+}

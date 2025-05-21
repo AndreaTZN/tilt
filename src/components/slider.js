@@ -15,6 +15,7 @@ window.Webflow.push(() => {
       slidesPerView: 'auto',
       spaceBetween: 20,
       freeMode: true,
+
       a11y: {
         slideRole: 'listitem',
       },
@@ -31,6 +32,26 @@ window.Webflow.push(() => {
     });
   });
 
+  $('.testimonials_component').each(function () {
+    const swiper = new Swiper('.swiper.is-slider-testimonials', {
+      slidesPerView: 'auto',
+      effect: 'fade',
+      pagination: {
+        el: '.swiper-pagination.is-slider-testimonials',
+        type: 'bullets',
+        bulletClass: 'swiper-bullet',
+        bulletActiveClass: 'is-active',
+        bulletElement: 'button',
+        clickable: 'true',
+      },
+      a11y: {
+        slideRole: 'listitem',
+      },
+      mousewheel: {
+        forceToAxis: true,
+      },
+    });
+  });
   // ================================================
   // SLIDERS ABOUT
   // ================================================
