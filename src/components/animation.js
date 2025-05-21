@@ -849,5 +849,3 @@ window.Webflow.push(() => {
     document.getElementsByTagName('head')[0].appendChild(script);
   });
 });
-
-console.log('test');
