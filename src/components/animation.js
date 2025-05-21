@@ -40,7 +40,7 @@ window.Webflow.push(() => {
               ease: 'power2.out',
             }
           )
-          .to(dropdownArrow, { rotate: 180, duration: 0.6, ease: 'power2.out' }, '<')
+          .to(dropdownArrow, { rotate: 180, duration: 1, ease: 'power2.out' }, '<')
           .to(blurDropdown, { opacity: 1, duration: 0.6 }, '<')
           .to(dropdownLine, { scaleX: 1, duration: 0.6 }, '-=.3');
         isDropdownOpen[timelineKey] = false;
