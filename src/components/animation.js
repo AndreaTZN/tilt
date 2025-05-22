@@ -122,16 +122,16 @@ window.Webflow.push(() => {
       });
     }
 
-    const navBurger = document.querySelector('.nav_burger');
-    let isMenuOpen = false;
-    navBurger.addEventListener('click', () => {
-      isMenuOpen = !isMenuOpen;
-      if (isMenuOpen) {
-        document.body.style.overflow = 'hidden'; // Empêche le scroll
-      } else {
-        document.body.style.overflow = ''; // Réactive le scroll (valeur par défaut)
-      }
-    });
+    // const navBurger = document.querySelector('.nav_burger');
+    // let isMenuOpen = false;
+    // navBurger.addEventListener('click', () => {
+    //   isMenuOpen = !isMenuOpen;
+    //   if (isMenuOpen) {
+    //     document.body.style.overflow = 'hidden';
+    //   } else {
+    //     document.body.style.overflow = '';
+    //   }
+    // });
   });
 
   // ================================================
