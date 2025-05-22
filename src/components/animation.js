@@ -124,12 +124,14 @@ window.Webflow.push(() => {
 
     const navBurger = document.querySelector('.nav_burger');
     let isMenuOpen = false;
+
     navBurger.addEventListener('click', () => {
       isMenuOpen = !isMenuOpen;
+
       if (isMenuOpen) {
-        document.body.style.overflow = 'hidden';
+        document.body.classList.add('no-scroll');
       } else {
-        document.body.style.overflow = '';
+        document.body.classList.remove('no-scroll');
       }
     });
   });
