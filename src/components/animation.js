@@ -256,7 +256,6 @@ window.Webflow.push(() => {
           start: 'top 80%',
           end: 'bottom 50%',
           once: true,
-          markers: true,
         },
         y: '1%',
         duration: 1,
