@@ -42,13 +42,20 @@ window.Webflow.push(() => {
         bulletClass: 'swiper-bullet',
         bulletActiveClass: 'is-active',
         bulletElement: 'button',
-        clickable: 'true',
+        clickable: true,
       },
       a11y: {
         slideRole: 'listitem',
       },
       mousewheel: {
         forceToAxis: true,
+      },
+      on: {
+        init: function () {
+          $('.swiper-bullet').each(function () {
+            $(this).append('<div class="bullet-indicator"></div>');
+          });
+        },
       },
     });
   });

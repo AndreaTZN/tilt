@@ -5,12 +5,13 @@ import DrawSVGPlugin from 'gsap/DrawSVGPlugin';
 import SplitType from 'split-type';
 import { Reeller } from 'reeller';
 import { Flip } from 'gsap/Flip';
-
+import { MotionPathPlugin } from 'gsap/MotionPathPlugin';
 Reeller.registerGSAP(gsap);
-gsap.registerPlugin(ScrollTrigger, Flip, DrawSVGPlugin);
+gsap.registerPlugin(ScrollTrigger, Flip, DrawSVGPlugin, MotionPathPlugin);
 
 window.Webflow ||= [];
 window.Webflow.push(() => {
+  const mm = gsap.matchMedia();
   // ================================================
   // NAVBAR DROPDOWNS
   // ================================================
@@ -148,8 +149,134 @@ window.Webflow.push(() => {
   // HOME
   // ================================================
 
-  $('.home-text_section').each(function () {});
+  $('.home-text_section').each(function (index) {
+    const el = $(this);
+    const cube1 = el.find('.home-text_cube.is-1');
+    const cube2 = el.find('.home-text_cube.is-2');
+    const cube3 = el.find('.home-text_cube.is-3');
 
+    mm.add(
+      {
+        // mobile/tablette ≤ 991px
+        isTablet: '(max-width: 991px)',
+        // desktop > 991px
+        isDesktop: '(min-width: 992px)',
+      },
+      (context) => {
+        let pathId;
+
+        if (context.conditions.isTablet) {
+          pathId = '#motionPathMobile'; // <= ajoute ce path dans ton HTML avec cet id
+        }
+
+        if (context.conditions.isDesktop) {
+          pathId = '#motionPathDesktop'; // <= idem pour desktop
+        }
+
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: el,
+            start: '30% center',
+            end: '90% center',
+            scrub: 1,
+            once: 1,
+          },
+        });
+        tl.set([cube1, cube2, cube3], {
+          opacity: 1,
+        });
+        tl.to(
+          cube1,
+          {
+            duration: 1,
+            ease: 'power2.out',
+            scale: 0.7,
+            rotate: '80deg',
+            motionPath: {
+              path: pathId,
+              align: pathId,
+              autoRotate: false,
+              alignOrigin: [0.5, 0.5],
+            },
+          },
+          0
+        )
+          .to(
+            cube2,
+            {
+              duration: 1,
+              ease: 'power2.out',
+              scale: 0.7,
+              rotate: '-80deg',
+              motionPath: {
+                path: pathId,
+                align: pathId,
+                autoRotate: false,
+                alignOrigin: [0.5, 0.5],
+              },
+            },
+            0.1
+          )
+          .to(
+            cube3,
+            {
+              duration: 1,
+              ease: 'power2.out',
+              scale: 0.5,
+              rotate: '-80deg',
+              motionPath: {
+                path: pathId,
+                align: pathId,
+                autoRotate: false,
+                alignOrigin: [0.5, 0.5],
+              },
+            },
+            0.2
+          )
+          .to(
+            [cube1, cube2, cube3],
+            {
+              opacity: 0,
+              duration: 0.3,
+              ease: 'power1.out',
+            },
+            0.8
+          );
+      }
+    );
+  });
+  $('.home-text2_component').each(function () {
+    console.log('test');
+    let homeImgCubePyramide = $(this).find('.home-text2_image-cube');
+    let mm = gsap.matchMedia();
+    mm.add('(min-width: 992px)', () => {
+      gsap.to(homeImgCubePyramide, {
+        scrollTrigger: {
+          trigger: $(this),
+          start: 'top 80%',
+          end: 'bottom 50%',
+          once: true,
+          markers: true,
+        },
+        y: '1%',
+        duration: 1,
+        ease: 'power1.out',
+      });
+    });
+    mm.add('(max-width: 992px)', () => {
+      gsap.to(homeImgCubePyramide, {
+        scrollTrigger: {
+          trigger: '.home-text2_image-wrap',
+          start: 'top 90%',
+          end: 'bottom 50%',
+          once: true,
+        },
+        bottom: '0rem',
+        duration: 1,
+        ease: 'power1.out',
+      });
+    });
+  });
   //REELLER
   $('.partners_component').each(function () {
     let reeller = new Reeller({
