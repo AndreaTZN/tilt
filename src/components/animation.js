@@ -129,9 +129,17 @@ window.Webflow.push(() => {
       isMenuOpen = !isMenuOpen;
 
       if (isMenuOpen) {
-        document.body.classList.add('no-scroll');
+        document.body.style.position = 'fixed';
+        document.body.style.width = '100%';
+        document.body.style.overflow = 'hidden';
+        document.body.style.top = '0';
+        document.body.style.left = '0';
       } else {
-        document.body.classList.remove('no-scroll');
+        document.body.style.position = '';
+        document.body.style.width = '';
+        document.body.style.overflow = '';
+        document.body.style.top = '';
+        document.body.style.left = '';
       }
     });
   });
