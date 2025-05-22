@@ -696,7 +696,7 @@ window.Webflow.push(() => {
         $icons2,
         {
           rotate: 180,
-          y: 1.5,
+          y: 1.2,
           duration: 0.5,
         },
         '+=.5'
