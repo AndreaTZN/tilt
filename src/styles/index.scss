@@ -173,9 +173,19 @@
 
 
 
-  .menu_wrapper {
-
-    -webkit-overflow-scrolling: touch;
+  .no-scroll {
+    position: fixed;
+    width: 100%;
+    overflow: hidden;
+    top: 0;
+    left: 0;
   }
+  
+  .menu_wrapper {
+    height: 100vh; /* ou autre hauteur selon ton design */
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch; /* pour scroll fluide iOS */
+  }
+  
 
 }
