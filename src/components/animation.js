@@ -108,29 +108,30 @@ window.Webflow.push(() => {
     if (window.innerWidth < 992) {
       let navbarDropdownToggle = document.querySelectorAll('.navbar_dropdwn-toggle');
       let buttonMenuMobile = document.querySelector('.nav_burger');
-      let dropdownIsOpen = false;
-      let isScrollLocked = false;
-
       navbarDropdownToggle.forEach((toggleButton) => {
+        let dropdownIsOpen = false;
         toggleButton.addEventListener('click', () => {
           dropdownIsOpen = true;
         });
-      });
-
-      buttonMenuMobile.addEventListener('click', () => {
-        // Ferme les dropdowns si un est ouvert
-        if (dropdownIsOpen) {
-          navbarDropdownToggle.forEach((btn) => {
-            btn.click(); // déclenche la fermeture si ouverte
-          });
-          dropdownIsOpen = false;
-        }
-
-        // Bloque ou réactive le scroll
-        isScrollLocked = !isScrollLocked;
-        document.body.style.overflow = isScrollLocked ? 'hidden' : '';
+        buttonMenuMobile.addEventListener('click', () => {
+          if (dropdownIsOpen) {
+            toggleButton.click();
+            dropdownIsOpen = false;
+          }
+        });
       });
     }
+
+    const navBurger = document.querySelector('.nav_burger');
+    let isMenuOpen = false;
+    navBurger.addEventListener('click', () => {
+      isMenuOpen = !isMenuOpen;
+      if (isMenuOpen) {
+        document.body.style.overflow = 'hidden'; // Empêche le scroll
+      } else {
+        document.body.style.overflow = ''; // Réactive le scroll (valeur par défaut)
+      }
+    });
   });
 
   // ================================================
