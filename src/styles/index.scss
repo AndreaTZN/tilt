@@ -214,3 +214,24 @@
     -webkit-overflow-scrolling: touch; /* pour scroll fluide iOS */
   }
 }
+
+
+
+.blog-rich-text blockquote {
+  position: relative;
+  padding-left: .875rem;
+  padding-top: .275rem;
+  padding-bottom: .275rem;
+
+  &::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 2px;
+    border-radius: 4px;
+    height: 100%;
+    background-color: #155ced;
+  }
+}
+
