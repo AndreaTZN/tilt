@@ -1017,4 +1017,21 @@ window.Webflow.push(() => {
 
     reeller.reverse(true);
   });
+
+  $('.insights-ressources_section').each(function () {
+    const $links = $('.ressources_menu-link');
+
+    $links.click(function () {
+      const index = $links.index(this);
+
+      $links.removeClass('active');
+
+      if (index === 0) {
+        $links.eq(0).addClass('active');
+        console.log('test');
+      } else {
+        $(this).addClass('active');
+      }
+    });
+  });
 });
