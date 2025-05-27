@@ -178,7 +178,7 @@ window.Webflow.push(() => {
             trigger: el,
             start: '30% center',
             end: '90% center',
-            scrub: 1,
+            scrub: 1.2,
             once: 1,
           },
         });
@@ -245,8 +245,8 @@ window.Webflow.push(() => {
       }
     );
   });
+
   $('.home-text2_component').each(function () {
-    console.log('test');
     let homeImgCubePyramide = $(this).find('.home-text2_image-cube');
     let mm = gsap.matchMedia();
     mm.add('(min-width: 992px)', () => {
@@ -330,14 +330,19 @@ window.Webflow.push(() => {
     const itemText = itemsText.find('.features-tab_item');
     const illus = $('.features-tab_illu');
     const progressBar = $('.button_circle-progress');
+    const images = $('.home-tabs_images-wrap .home-tabs_images');
+    const button = el.find('.button_secondary');
+
+    const urls = [
+      '/clients/consommateurs-denergie',
+      '/clients/gestionnaires-energie',
+      '/clients/fournisseurs-denergie',
+    ];
 
     let currentIndex = 0;
     let autoChangeInterval = 10000;
     let interval;
     let progressAnimation;
-
-    // Stocker les instances de SplitType pour chaque titre dupliqué
-    let splitInstances = [];
 
     gsap.set(progressBar, { drawSVG: 0 });
 
@@ -358,6 +363,9 @@ window.Webflow.push(() => {
       // Mettre à jour les éléments actifs
       itemText.removeClass('active').eq(index).addClass('active');
       illus.removeClass('active').eq(index).addClass('active');
+      images.removeClass('active').eq(index).addClass('active');
+
+      button.attr('href', urls[index]);
 
       // Gérer l'affichage du titre dupliqué
       itemText.each(function (i) {
