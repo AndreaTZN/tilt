@@ -176,9 +176,9 @@ window.Webflow.push(() => {
         const tl = gsap.timeline({
           scrollTrigger: {
             trigger: el,
-            start: '30% center',
-            end: '90% center',
-            scrub: 1.2,
+            start: 'top center',
+            end: '70% top',
+            scrub: 1.7,
             once: 1,
           },
         });
@@ -188,7 +188,7 @@ window.Webflow.push(() => {
         tl.to(
           cube1,
           {
-            duration: 1,
+            duration: 0.9,
             ease: 'power2.out',
             scale: 0.7,
             rotate: '80deg',
@@ -204,7 +204,7 @@ window.Webflow.push(() => {
           .to(
             cube2,
             {
-              duration: 1,
+              duration: 0.9,
               ease: 'power2.out',
               scale: 0.7,
               rotate: '-80deg',
@@ -215,12 +215,12 @@ window.Webflow.push(() => {
                 alignOrigin: [0.5, 0.5],
               },
             },
-            0.1
+            0.08
           )
           .to(
             cube3,
             {
-              duration: 1,
+              duration: 0.9,
               ease: 'power2.out',
               scale: 0.5,
               rotate: '-80deg',
@@ -231,16 +231,16 @@ window.Webflow.push(() => {
                 alignOrigin: [0.5, 0.5],
               },
             },
-            0.2
+            0.14
           )
           .to(
             [cube1, cube2, cube3],
             {
               opacity: 0,
-              duration: 0.3,
-              ease: 'power1.out',
+              duration: 0,
+              ease: 'none',
             },
-            0.8
+            0.7
           );
       }
     );
