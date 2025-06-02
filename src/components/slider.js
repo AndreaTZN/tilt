@@ -58,6 +58,17 @@ window.Webflow.push(() => {
         },
       },
     });
+
+    const swiperTestiCards = new Swiper('.swiper.is-testimonials-card', {
+      slidesPerView: 'auto',
+      effect: 'fade',
+      a11y: {
+        slideRole: 'listitem',
+      },
+    });
+
+    swiper.controller.control = swiperTestiCards;
+    swiperTestiCards.controller.control = swiper;
   });
   // ================================================
   // SLIDERS ABOUT
