@@ -11,6 +11,15 @@ window.Webflow.push(() => {
   // ================================================
 
   $('.slider_section').each(function () {
+    if (window.innerWidth >= 992) {
+      const slides = document.querySelectorAll('.swiper-slide.is-ressources-slider');
+      if (slides.length === 3) {
+        slides.forEach((slide) => {
+          slide.style.width = 'calc(33.33% - 20px)';
+        });
+      }
+    }
+
     const swiper = new Swiper('.swiper.is-ressources-slider', {
       slidesPerView: 'auto',
       spaceBetween: 20,
