@@ -282,7 +282,7 @@ window.Webflow.push(() => {
       container: '.partners_reel',
       wrapper: '.partners_reel_wrap',
       itemSelector: '.partners_reel_item',
-      speed: 10,
+      speed: 30,
     });
 
     reeller.reverse(true);
