@@ -690,6 +690,49 @@ window.Webflow.push(() => {
   });
 
   // ================================================
+  // FEATURES NUMBER SVG — CUBES CONVERGENCE
+  // ================================================
+  $('.features-number_svg').each(function () {
+    const svgEl = this;
+    const $svg = $(svgEl);
+
+    const rootGroup = $svg.find('> g')[0];
+    if (!rootGroup) return;
+
+    // Centre dynamique depuis le viewBox
+    const vb = svgEl.viewBox?.baseVal;
+    const svgCX = vb ? vb.x + vb.width / 2 : svgEl.getBBox().width / 2;
+    const svgCY = vb ? vb.y + vb.height / 2 : svgEl.getBBox().height / 2;
+
+    $(rootGroup)
+      .children('.cube')
+      .each(function () {
+        const g = this;
+        const bbox = g.getBBox ? g.getBBox() : null;
+
+        const cx = bbox ? bbox.x + bbox.width / 2 : svgCX;
+        const cy = bbox ? bbox.y + bbox.height / 2 : svgCY;
+
+        const dx = svgCX - cx;
+        const dy = svgCY - cy;
+
+        gsap.to(g, {
+          x: dx * 0.2,
+          y: dy * 0.2,
+          scale: 0.9,
+          transformOrigin: '50% 50%',
+          ease: 'power2.in',
+          scrollTrigger: {
+            trigger: svgEl,
+            start: 'top 80%',
+            end: 'center 30%',
+            scrub: 1.5,
+          },
+        });
+      });
+  });
+
+  // ================================================
   // INVESTISSEURS
   // ================================================
 
